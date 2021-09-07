@@ -71,7 +71,7 @@ Vec3 Vec3::operator/(double t) const
     assert(!isnan(t) && "ERROR:t is NAN");
     assert((abs(t) > std::numeric_limits<double>::epsilon()) && "ERROR:t is almost 0");
 
-    return Vec3(x / t, y / t, z / t);
+    return operator*(1 / t);
 }
 
 Vec3& Vec3::operator+=(const Vec3& v)
@@ -158,6 +158,16 @@ void Vec3::Normalize()
     }
 }
 
+Vec3 Vec3::GetUnitVector() const
+{
+    assert(!isnan(Length()) && "ERROR:Length() is NAN");
+    assert((Length() > std::numeric_limits<double>::epsilon()) && "ERROR:Length() is almost 0");
+
+    double scale = 1.0 / Length();
+    return Vec3(x * scale, y * scale, z * scale);
+}
+
+
 double Vec3::DistanceSquared(const Vec3& v) const
 {
     double dx = v.x - x;
@@ -170,4 +180,11 @@ double Vec3::DistanceSquared(const Vec3& v) const
 double Vec3::Distance(const Vec3& v) const
 {
     return std::sqrt(DistanceSquared(v));
+}
+
+bool Vec3::EpsilonEqual(const Vec3& v, double epsilon) const
+{
+    return (abs(x - v.x) <= epsilon &&
+            abs(y - v.y) <= epsilon &&
+            abs(z - v.z) <= epsilon);
 }

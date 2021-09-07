@@ -39,13 +39,20 @@ public:
     //utility functions
     double Dot(const Vec3& v) const;
     static double Dot(const Vec3& v1, const Vec3& v2);
+
     Vec3 Cross(const Vec3& v) const;
     static Vec3 Cross(const Vec3& v1, const Vec3& v2);
+
     double LengthSquared() const;
     double Length() const;
+
     void Normalize();
+    Vec3 GetUnitVector() const;
+
     double DistanceSquared(const Vec3& v) const;
     double Distance(const Vec3& v) const;
+
+    bool EpsilonEqual(const Vec3& v, double epsilon) const;
 };
 
 #endif //VEC3_H
