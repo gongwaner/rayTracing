@@ -18,6 +18,13 @@ Vec3::Vec3(double inX, double inY, double inZ) : x(inX), y(inY), z(inY)
 {
 }
 
+Vec3::Vec3(const Vec3& v)
+{
+    x = v.x;
+    y = v.y;
+    z = v.z;
+}
+
 
 //setters
 void Vec3::SetX(double inX)

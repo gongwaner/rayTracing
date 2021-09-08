@@ -17,6 +17,7 @@ public:
     //constructors
     Vec3();
     Vec3(double inX, double inY, double inZ);
+    Vec3(const Vec3& v);
 
 
     //getter and setters
@@ -60,5 +61,21 @@ public:
 
     bool EpsilonEqual(const Vec3& v, double epsilon) const;
 };
+
+
+inline Vec3 operator*(double t, const Vec3& v)
+{
+    return Vec3(t * v.GetX(), t * v.GetY(), t * v.GetZ());
+}
+
+inline Vec3 operator*(const Vec3& v, double t)
+{
+    return t * v;
+}
+
+inline Vec3 operator/(const Vec3& v, double t)
+{
+    return (1 / t) * v;
+}
 
 #endif //VEC3_H
