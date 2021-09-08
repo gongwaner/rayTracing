@@ -12,31 +12,27 @@ Vec3 Vec3::Zero = Vec3(0, 0, 0);
 //constructors
 Vec3::Vec3() : x(0), y(0), z(0)
 {
-
 }
 
-Vec3::Vec3(double x, double y, double z)
+Vec3::Vec3(double inX, double inY, double inZ) : x(inX), y(inY), z(inY)
 {
-    this->x = x;
-    this->y = y;
-    this->z = z;
 }
 
 
 //setters
-void Vec3::SetX(double x)
+void Vec3::SetX(double inX)
 {
-    this->x = x;
+    x = inX;
 }
 
-void Vec3::SetY(double y)
+void Vec3::SetY(double inY)
 {
-    this->y = y;
+    y = inY;
 }
 
-void Vec3::SetZ(double z)
+void Vec3::SetZ(double inZ)
 {
-    this->z = z;
+    z = inZ;
 }
 
 
@@ -76,27 +72,27 @@ Vec3 Vec3::operator/(double t) const
 
 Vec3& Vec3::operator+=(const Vec3& v)
 {
-    this->x += v.x;
-    this->y += v.y;
-    this->z += v.z;
+    x += v.x;
+    y += v.y;
+    z += v.z;
 
     return *this;
 }
 
 Vec3& Vec3::operator-=(const Vec3& v)
 {
-    this->x -= v.x;
-    this->y -= v.y;
-    this->z -= v.z;
+    x -= v.x;
+    y -= v.y;
+    z -= v.z;
 
     return *this;
 }
 
 Vec3& Vec3::operator*=(double t)
 {
-    this->x *= t;
-    this->y *= t;
-    this->z *= t;
+    x *= t;
+    y *= t;
+    z *= t;
 
     return *this;
 }

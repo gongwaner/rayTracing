@@ -13,16 +13,16 @@ public:
 
     //constructors
     Vec3();
-    Vec3(double x, double y, double z);
+    Vec3(double inX, double inY, double inZ);
 
     //getter and setters
     double GetX() const     { return x; }
     double GetY() const     { return y; }
     double GetZ() const     { return z; }
 
-    void SetX(double x);
-    void SetY(double y);
-    void SetZ(double z);
+    void SetX(double inX);
+    void SetY(double inY);
+    void SetZ(double inZ);
 
     //operator overloading
     Vec3 operator-() const;
