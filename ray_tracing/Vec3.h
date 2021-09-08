@@ -1,6 +1,7 @@
 #ifndef VEC3_H
 #define VEC3_H
 
+
 class Vec3
 {
 private:
@@ -9,11 +10,14 @@ private:
     double z;
 
 public:
+    //static variables
     static Vec3 Zero;
+
 
     //constructors
     Vec3();
     Vec3(double inX, double inY, double inZ);
+
 
     //getter and setters
     double GetX() const     { return x; }
@@ -23,6 +27,7 @@ public:
     void SetX(double inX);
     void SetY(double inY);
     void SetZ(double inZ);
+
 
     //operator overloading
     Vec3 operator-() const;
@@ -35,6 +40,7 @@ public:
     Vec3& operator-=(const Vec3& v);
     Vec3& operator*=(double t);
     Vec3& operator/=(double t);
+
 
     //utility functions
     double Dot(const Vec3& v) const;
