@@ -53,6 +53,7 @@ public:
     static Colorf Red;
     static Colorf Green;
     static Colorf Blue;
+    static Colorf SkyBlue;
     static Colorf Yellow;
     static Colorf Cyan;
     static Colorf Magenta;
@@ -60,5 +61,10 @@ public:
     static Colorf Navy;
     static Colorf Orange;
 };
+
+inline Colorf operator*(double t, const Colorf& v)
+{
+    return v * t;
+}
 
 #endif //COLORF_H

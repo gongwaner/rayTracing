@@ -8,6 +8,7 @@ Colorf Colorf::White = Colorf(255, 255, 255, 255);
 Colorf Colorf::Red = Colorf(255, 0, 0, 255);
 Colorf Colorf::Green = Colorf(0, 255, 0, 255);
 Colorf Colorf::Blue = Colorf(0, 0, 255, 255);
+Colorf Colorf::SkyBlue = Colorf(128, 179, 255, 255);
 Colorf Colorf::Yellow = Colorf(255, 255, 0, 255);
 Colorf Colorf::Cyan = Colorf(0, 255, 255, 255);
 Colorf Colorf::Magenta = Colorf(255, 0, 255, 255);
