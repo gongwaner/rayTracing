@@ -26,10 +26,10 @@ Colorf::Colorf(int inR, int inG, int inB, int inA)
 {
     const float scale = 1.0f / 255.0f;
 
-    r = std::clamp((float) inR, 0.0f, 255.0f) * scale;
-    g = std::clamp((float) inG, 0.0f, 255.0f) * scale;
-    b = std::clamp((float) inB, 0.0f, 255.0f) * scale;
-    a = std::clamp((float) inA, 0.0f, 255.0f) * scale;
+    r = std::clamp((float)inR, 0.0f, 255.0f) * scale;
+    g = std::clamp((float)inG, 0.0f, 255.0f) * scale;
+    b = std::clamp((float)inB, 0.0f, 255.0f) * scale;
+    a = std::clamp((float)inA, 0.0f, 255.0f) * scale;
 }
 
 Colorf::Colorf(float rgba[4])

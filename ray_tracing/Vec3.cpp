@@ -170,7 +170,6 @@ Vec3 Vec3::GetUnitVector() const
     return Vec3(x * scale, y * scale, z * scale);
 }
 
-
 double Vec3::DistanceSquared(const Vec3& v) const
 {
     double dx = v.x - x;

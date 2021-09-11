@@ -1,6 +1,8 @@
 #ifndef COLORF_H
 #define COLORF_H
 
+#include <ostream>
+#include <cmath>
 
 class Colorf
 {
@@ -65,6 +67,20 @@ public:
 inline Colorf operator*(double t, const Colorf& v)
 {
     return v * t;
+}
+
+inline std::ostream& operator<<(std::ostream& out, const Colorf& c)
+{
+    return out << c.GetR() << " " << c.GetG() << " " << c.GetB() << c.GetA() << std::endl;
+}
+
+inline void WriteColor(std::ostream& out, const Colorf& pixelColor)
+{
+    //convert from float[0.0f,1.0f] to byte[0,255]
+    const float scale = 255.0f;
+    out << static_cast<int>(std::round(pixelColor.GetR() * scale)) << " "
+    << static_cast<int>(std::round(pixelColor.GetG() * scale)) << " "
+    << static_cast<int>(std::round(pixelColor.GetB() * scale)) << "\n";
 }
 
 #endif //COLORF_H
