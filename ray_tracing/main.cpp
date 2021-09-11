@@ -1,27 +1,42 @@
 #include <iostream>
 #include <fstream>
-#include <cmath>
 
 #include "Ray.h"
 #include "Colorf.h"
 
 
-Colorf GetRayColor(const Ray& r)
+bool HitSphere(const Vec3& center, double radius, const Ray& ray)
 {
-    Vec3 unit_direction = r.GetDirection().GetUnitVector();//(-1,1)
+    Vec3 co = ray.GetOrigin() - center;
+
+    double a = Vec3::Dot(ray.GetDirection(), ray.GetDirection());
+    double b = 2.0 * Vec3::Dot(co, ray.GetDirection());
+    double c = Vec3::Dot(co, co) - radius * radius;
+
+    double discriminant = b * b - 4 * a * c;
+
+    return discriminant > 0;
+}
+
+Colorf GetBackgroundColor(const Ray& ray)
+{
+    Vec3 unit_direction = ray.GetDirection().GetUnitVector();//(-1,1)
     auto t = 0.5 * (unit_direction.GetY() + 1.0);//convert (-1,1) to [0,1]
 
     return Colorf::SkyBlue.Lerp(Colorf::White, t);
 }
 
-void WriteColor(std::ostream& out, Colorf pixelColor)
+Colorf GetRayColor(const Ray& ray)
 {
-    //convert from float[0.0f,1.0f] to byte[0,255]
-    const float scale = 255.0f;
-    out << static_cast<int>(std::round(pixelColor.GetR() * scale)) << " "
-        << static_cast<int>(std::round(pixelColor.GetG() * scale)) << " "
-        << static_cast<int>(std::round(pixelColor.GetB() * scale)) << "\n";
+    Vec3 sphere_center(0, 0, -1);
+    double radius = 0.5;
+
+    if(HitSphere(sphere_center, radius, ray))
+        return Colorf::Red;
+
+    return GetBackgroundColor(ray);
 }
+
 
 int main()
 {
