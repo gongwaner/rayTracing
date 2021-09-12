@@ -5,7 +5,7 @@
 #include "Colorf.h"
 
 
-bool HitSphere(const Vec3& center, double radius, const Ray& ray)
+bool HitSphere(const Vec3& center, double radius, const Ray& ray, double& hitPoint)
 {
     Vec3 co = ray.GetOrigin() - center;
 
@@ -15,13 +15,16 @@ bool HitSphere(const Vec3& center, double radius, const Ray& ray)
 
     double discriminant = b * b - 4 * a * c;
 
-    return discriminant > 0;
+    if(discriminant >= 0)
+        hitPoint = (-b - sqrt(discriminant)) / (2.0 * a);
+
+    return discriminant >= 0;
 }
 
 Colorf GetBackgroundColor(const Ray& ray)
 {
     Vec3 unit_direction = ray.GetDirection().GetUnitVector();//(-1,1)
-    auto t = 0.5 * (unit_direction.GetY() + 1.0);//convert (-1,1) to [0,1]
+    auto t = 0.5 * unit_direction.GetY() + 0.5;//convert (-1,1) to [0,1]
 
     return Colorf::SkyBlue.Lerp(Colorf::White, t);
 }
@@ -31,8 +34,14 @@ Colorf GetRayColor(const Ray& ray)
     Vec3 sphere_center(0, 0, -1);
     double radius = 0.5;
 
-    if(HitSphere(sphere_center, radius, ray))
-        return Colorf::Red;
+    double hit_point = -1.0;
+    if(HitSphere(sphere_center, radius, ray, hit_point) &&
+       hit_point > 0)
+    {
+        Vec3 normal = (ray.PointAt(hit_point) - sphere_center).GetUnitVector();
+
+        return Colorf(float(0.5 * normal.GetX() + 0.5), float(0.5 * normal.GetY() + 0.5), float(0.5 * normal.GetZ() + 0.5));//convert (-1,1) to [0,1]
+    }
 
     return GetBackgroundColor(ray);
 }
