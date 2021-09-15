@@ -74,4 +74,5 @@ inline std::ostream& operator<<(std::ostream& out, const Vec3& v)
     return out << v.GetX() << " " << v.GetY() << " " << v.GetZ() << std::endl;
 }
 
+
 #endif //VEC3_H

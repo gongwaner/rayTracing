@@ -83,4 +83,5 @@ inline void WriteColor(std::ostream& out, const Colorf& pixelColor)
     << static_cast<int>(std::round(pixelColor.GetB() * scale)) << "\n";
 }
 
+
 #endif //COLORF_H

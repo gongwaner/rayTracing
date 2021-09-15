@@ -24,4 +24,5 @@ public:
     Vec3 PointAt(double t) const;
 };
 
+
 #endif //RAY_H
