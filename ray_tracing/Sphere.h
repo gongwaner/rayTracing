@@ -3,7 +3,7 @@
 
 #include "Hittable.h"
 
-class Sphere : Hittable
+class Sphere : public Hittable
 {
 private:
     Vec3 center;

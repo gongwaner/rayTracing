@@ -3,23 +3,8 @@
 
 #include "Ray.h"
 #include "Colorf.h"
+#include "Sphere.h"
 
-
-bool HitSphere(const Vec3& center, double radius, const Ray& ray, double& hitPoint)
-{
-    Vec3 co = ray.GetOrigin() - center;
-
-    double a = Vec3::Dot(ray.GetDirection(), ray.GetDirection());
-    double b = 2.0 * Vec3::Dot(co, ray.GetDirection());
-    double c = Vec3::Dot(co, co) - radius * radius;
-
-    double discriminant = b * b - 4 * a * c;
-
-    if(discriminant >= 0)
-        hitPoint = (-b - sqrt(discriminant)) / (2.0 * a);
-
-    return discriminant >= 0;
-}
 
 Colorf GetBackgroundColor(const Ray& ray)
 {
@@ -29,18 +14,13 @@ Colorf GetBackgroundColor(const Ray& ray)
     return Colorf::SkyBlue.Lerp(Colorf::White, t);
 }
 
-Colorf GetRayColor(const Ray& ray)
+Colorf GetRayColor(const Ray& ray, const Hittable* hittable)
 {
-    Vec3 sphere_center(0, 0, -1);
-    double radius = 0.5;
-
-    double hit_point = -1.0;
-    if(HitSphere(sphere_center, radius, ray, hit_point) &&
-       hit_point > 0)
+    HitRecord record;
+    if(hittable->Hit(ray, 0, std::numeric_limits<double>::infinity(), record))
     {
-        Vec3 normal = (ray.PointAt(hit_point) - sphere_center).GetUnitVector();
-
-        return Colorf(float(0.5 * normal.GetX() + 0.5), float(0.5 * normal.GetY() + 0.5), float(0.5 * normal.GetZ() + 0.5));//convert (-1,1) to [0,1]
+        return Colorf(float(0.5 * record.normal.GetX() + 0.5), float(0.5 * record.normal.GetY() + 0.5),
+                      float(0.5 * record.normal.GetZ() + 0.5));//convert (-1,1) to [0,1]
     }
 
     return GetBackgroundColor(ray);
@@ -66,6 +46,9 @@ int main()
     Vec3 vertical = Vec3(0.0, viewport_height, 0.0);
     Vec3 lower_left_corner = origin - horizontal / 2.0 - vertical / 2.0 - Vec3(0, 0, focal_length);
 
+    //objects
+    std::unique_ptr<Sphere> sphere(new Sphere(Vec3(0.0, 0.0, -1.0), 0.5));
+
     //render
     out_stream << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
@@ -78,7 +61,7 @@ int main()
 
             Vec3 direction = lower_left_corner + (u * horizontal) + (v * vertical) - origin;
             Ray ray(origin, direction);
-            Colorf pixel_color = GetRayColor(ray);
+            Colorf pixel_color = GetRayColor(ray, sphere.get());
             WriteColor(out_stream, pixel_color);
         }
     }
