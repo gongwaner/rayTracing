@@ -5,7 +5,7 @@
 #include "Colorf.h"
 #include "Sphere.h"
 #include "Camera.h"
-
+#include "CommonUtil.h"
 
 Colorf GetBackgroundColor(const Ray& ray)
 {
@@ -36,6 +36,7 @@ int main()
     const float aspect_ratio = 16.0f / 9.0f;
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
+    const int samples_per_pixel = 100;
 
     //camera
     Camera camera;
@@ -50,11 +51,16 @@ int main()
     {
         for(int i = 0; i < image_width; ++i)
         {
-            double u = double(i) / (image_width - 1);
-            double v = double(j) / (image_height - 1);
+            //for each pixel, send multiple rays and average it
+            Colorf pixel_color = Colorf(0.0f, 0.0f, 0.0f);
+            for(int itr = 0; itr < samples_per_pixel; ++itr)
+            {
+                double u = double(i + GetRandomDouble()) / (image_width - 1);
+                double v = double(j + GetRandomDouble()) / (image_height - 1);
 
-            Colorf pixel_color = GetRayColor(camera.GetRay(u, v), sphere.get());
-            WriteColor(out_stream, pixel_color);
+                pixel_color += GetRayColor(camera.GetRay(u, v), sphere.get());
+            }
+            WriteColorMultiSample(out_stream, pixel_color, samples_per_pixel);
         }
     }
 

@@ -79,8 +79,23 @@ inline void WriteColor(std::ostream& out, const Colorf& pixelColor)
     //convert from float[0.0f,1.0f] to byte[0,255]
     const float scale = 255.0f;
     out << static_cast<int>(std::round(pixelColor.GetR() * scale)) << " "
-    << static_cast<int>(std::round(pixelColor.GetG() * scale)) << " "
-    << static_cast<int>(std::round(pixelColor.GetB() * scale)) << "\n";
+        << static_cast<int>(std::round(pixelColor.GetG() * scale)) << " "
+        << static_cast<int>(std::round(pixelColor.GetB() * scale)) << "\n";
+}
+
+inline void WriteColorMultiSample(std::ostream& out, const Colorf& pixelColor, int samplesPerPixel)
+{
+    //divide color by number of samples
+    const float sample_scale = 1.0f / (float) samplesPerPixel;
+    float r = pixelColor.GetR() * sample_scale;
+    float g = pixelColor.GetG() * sample_scale;
+    float b = pixelColor.GetB() * sample_scale;
+
+    //convert from float[0.0f,1.0f] to byte[0,255]
+    const float scale = 255.0f;
+    out << static_cast<int>(std::round(std::clamp(r, 0.0f, 1.0f) * scale)) << " "
+        << static_cast<int>(std::round(std::clamp(g, 0.0f, 1.0f) * scale)) << " "
+        << static_cast<int>(std::round(std::clamp(b, 0.0f, 1.0f) * scale)) << "\n";
 }
 
 
