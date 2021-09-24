@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "CommonUtil.h"
 
+
 Colorf GetBackgroundColor(const Ray& ray)
 {
     Vec3 unit_direction = ray.GetDirection().GetUnitVector();//(-1,1)
@@ -15,13 +16,25 @@ Colorf GetBackgroundColor(const Ray& ray)
     return Colorf::SkyBlue.Lerp(Colorf::White, t);
 }
 
-Colorf GetRayColor(const Ray& ray, const Hittable* hittable)
+Colorf GetNormalColor(const HitRecord& record)
 {
+    return Colorf(float(0.5 * record.normal.GetX() + 0.5), float(0.5 * record.normal.GetY() + 0.5),
+                  float(0.5 * record.normal.GetZ() + 0.5));//convert (-1,1) to [0,1]
+}
+
+Colorf GetRayColor(const Ray& ray, const Hittable* hittable, int maxItr = 10)
+{
+    //exceed ray bounce limit, no more light is gathered
+    if(maxItr <= 0)
+        return Colorf::Black;
+
+    const float attenuation = 0.8f;
     HitRecord record;
+
     if(hittable->Hit(ray, 0, std::numeric_limits<double>::infinity(), record))
     {
-        return Colorf(float(0.5 * record.normal.GetX() + 0.5), float(0.5 * record.normal.GetY() + 0.5),
-                      float(0.5 * record.normal.GetZ() + 0.5));//convert (-1,1) to [0,1]
+        Vec3 target = record.point + record.normal + GetRandomVectorInUnitSphere();//p+n = center. center+random point = point
+        return attenuation * GetRayColor(Ray(record.point, target - record.point), hittable, --maxItr);
     }
 
     return GetBackgroundColor(ray);
@@ -37,6 +50,7 @@ int main()
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 100;
+    const int max_iter = 20;
 
     //camera
     Camera camera;
@@ -58,7 +72,7 @@ int main()
                 double u = double(i + GetRandomDouble()) / (image_width - 1);
                 double v = double(j + GetRandomDouble()) / (image_height - 1);
 
-                pixel_color += GetRayColor(camera.GetRay(u, v), sphere.get());
+                pixel_color += GetRayColor(camera.GetRay(u, v), sphere.get(), max_iter);
             }
             WriteColorMultiSample(out_stream, pixel_color, samples_per_pixel);
         }

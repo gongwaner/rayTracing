@@ -61,6 +61,9 @@ public:
     double Distance(const Vec3& v) const;
 
     bool EpsilonEqual(const Vec3& v, double epsilon) const;
+
+    static Vec3 GetRandomVector();
+    static Vec3 GetRandomVector(double min, double max);
 };
 
 
@@ -74,5 +77,21 @@ inline std::ostream& operator<<(std::ostream& out, const Vec3& v)
     return out << v.GetX() << " " << v.GetY() << " " << v.GetZ() << std::endl;
 }
 
+/**
+ * rejection method to pick a random point in unit sphere(r=1)
+ * pick a random point in the unit cube where x, y, and z all range from −1 to +1.
+ * Reject this point and try again if the point is outside the sphere.
+ */
+inline Vec3 GetRandomVectorInUnitSphere()
+{
+    while(true)
+    {
+        Vec3 p = Vec3::GetRandomVector(-1,1);
+        if(p.LengthSquared() >= 1)
+            continue;
+
+        return p;
+    }
+}
 
 #endif //VEC3_H

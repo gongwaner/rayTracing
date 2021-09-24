@@ -3,6 +3,7 @@
 #include <assert.h>
 
 #include "Vec3.h"
+#include "CommonUtil.h"
 
 
 //static variables
@@ -189,4 +190,14 @@ bool Vec3::EpsilonEqual(const Vec3& v, double epsilon) const
     return (abs(x - v.x) <= epsilon &&
             abs(y - v.y) <= epsilon &&
             abs(z - v.z) <= epsilon);
+}
+
+Vec3 Vec3::GetRandomVector()
+{
+    return Vec3(GetRandomDouble(), GetRandomDouble(), GetRandomDouble());
+}
+
+Vec3 Vec3::GetRandomVector(double min, double max)
+{
+    return Vec3(GetRandomDouble(min, max), GetRandomDouble(min, max), GetRandomDouble(min, max));
 }
