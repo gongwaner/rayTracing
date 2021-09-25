@@ -22,19 +22,39 @@ Colorf GetNormalColor(const HitRecord& record)
                   float(0.5 * record.normal.GetZ() + 0.5));//convert (-1,1) to [0,1]
 }
 
-Colorf GetRayColor(const Ray& ray, const Hittable* hittable, int maxItr = 10)
+bool HitAnything(const Ray& ray, double tmin, double tmax, HitRecord& record,
+                 const std::vector<std::unique_ptr<Hittable>>& objects)
+{
+    HitRecord temp_record;
+    bool hit_anything = false;
+    double closest_so_far = tmax;
+
+    for(const auto& object:objects)
+    {
+        if(object->Hit(ray, tmin, closest_so_far, temp_record))
+        {
+            hit_anything = true;
+            record = temp_record;
+            closest_so_far = temp_record.t;
+        }
+    }
+
+    return hit_anything;
+}
+
+Colorf GetRayColor(const Ray& ray, const std::vector<std::unique_ptr<Hittable>>& objects, int maxItr = 10)
 {
     //exceed ray bounce limit, no more light is gathered
     if(maxItr <= 0)
         return Colorf::Black;
 
-    const float attenuation = 0.8f;
+    const float attenuation = 0.9f;
     HitRecord record;
 
-    if(hittable->Hit(ray, 0, std::numeric_limits<double>::infinity(), record))
+    if(HitAnything(ray, 0, std::numeric_limits<double>::infinity(), record, objects))
     {
         Vec3 target = record.point + record.normal + GetRandomVectorInUnitSphere();//p+n = center. center+random point = point
-        return attenuation * GetRayColor(Ray(record.point, target - record.point), hittable, --maxItr);
+        return attenuation * GetRayColor(Ray(record.point, target - record.point), objects, --maxItr);
     }
 
     return GetBackgroundColor(ray);
@@ -56,7 +76,9 @@ int main()
     Camera camera;
 
     //objects
-    std::unique_ptr<Sphere> sphere(new Sphere(Vec3(0.0, 0.0, -1.0), 0.5));
+    std::vector<std::unique_ptr<Hittable>> objects;
+    objects.push_back(std::make_unique<Sphere>(Vec3(0.0, 0.0, -1.0), 0.5));
+    objects.push_back(std::make_unique<Sphere>(Vec3(0.0, -100.5, -1.0), 100));//ground
 
     //render
     out_stream << "P3\n" << image_width << ' ' << image_height << "\n255\n";
@@ -72,7 +94,7 @@ int main()
                 double u = double(i + GetRandomDouble()) / (image_width - 1);
                 double v = double(j + GetRandomDouble()) / (image_height - 1);
 
-                pixel_color += GetRayColor(camera.GetRay(u, v), sphere.get(), max_iter);
+                pixel_color += GetRayColor(camera.GetRay(u, v), objects, max_iter);
             }
             WriteColorMultiSample(out_stream, pixel_color, samples_per_pixel);
         }
