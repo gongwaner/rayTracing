@@ -83,13 +83,15 @@ inline void WriteColor(std::ostream& out, const Colorf& pixelColor)
         << static_cast<int>(std::round(pixelColor.GetB() * scale)) << "\n";
 }
 
-inline void WriteColorMultiSample(std::ostream& out, const Colorf& pixelColor, int samplesPerPixel)
+inline void WriteColorMultiSample(std::ostream& out, const Colorf& pixelColor, int samplesPerPixel, float gamma = 2.2f)
 {
+    float exponent = 1.0f / gamma;
+
     //divide color by number of samples
     const float sample_scale = 1.0f / (float) samplesPerPixel;
-    float r = pixelColor.GetR() * sample_scale;
-    float g = pixelColor.GetG() * sample_scale;
-    float b = pixelColor.GetB() * sample_scale;
+    float r = pow(pixelColor.GetR() * sample_scale, exponent);
+    float g = pow(pixelColor.GetG() * sample_scale, exponent);
+    float b = pow(pixelColor.GetB() * sample_scale, exponent);
 
     //convert from float[0.0f,1.0f] to byte[0,255]
     const float scale = 255.0f;

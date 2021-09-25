@@ -48,10 +48,10 @@ Colorf GetRayColor(const Ray& ray, const std::vector<std::unique_ptr<Hittable>>&
     if(maxItr <= 0)
         return Colorf::Black;
 
-    const float attenuation = 0.9f;
+    const float attenuation = 0.5f;
     HitRecord record;
 
-    if(HitAnything(ray, 0, std::numeric_limits<double>::infinity(), record, objects))
+    if(HitAnything(ray, 0.0001, std::numeric_limits<double>::infinity(), record, objects))
     {
         Vec3 target = record.point + record.normal + GetRandomVectorInUnitSphere();//p+n = center. center+random point = point
         return attenuation * GetRayColor(Ray(record.point, target - record.point), objects, --maxItr);
