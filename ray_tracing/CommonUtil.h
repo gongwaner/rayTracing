@@ -23,5 +23,37 @@ inline double GetRandomDouble(double min, double max)
     return min + (max - min) * GetRandomDouble();
 }
 
+inline Vec3 GetRandomVector()
+{
+    return Vec3(GetRandomDouble(), GetRandomDouble(), GetRandomDouble());
+}
+
+inline Vec3 GetRandomVector(double min, double max)
+{
+    return Vec3(GetRandomDouble(min, max), GetRandomDouble(min, max), GetRandomDouble(min, max));
+}
+
+/**
+ * rejection method to pick a random point in unit sphere(r=1)
+ * pick a random point in the unit cube where x, y, and z all range from −1 to +1.
+ * Reject this point and try again if the point is outside the sphere.
+ */
+inline Vec3 GetRandomVectorInUnitSphere()
+{
+    while(true)
+    {
+        Vec3 p = GetRandomVector(-1,1);
+        if(p.LengthSquared() >= 1)
+            continue;
+
+        return p;
+    }
+}
+
+inline Vec3 GetLambertianRandomUnitVector()
+{
+    return GetRandomVectorInUnitSphere().GetUnitVector();
+}
+
 
 #endif //COMMONUTIL_H

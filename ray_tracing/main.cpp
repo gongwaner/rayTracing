@@ -53,7 +53,7 @@ Colorf GetRayColor(const Ray& ray, const std::vector<std::unique_ptr<Hittable>>&
 
     if(HitAnything(ray, 0.0001, std::numeric_limits<double>::infinity(), record, objects))
     {
-        Vec3 target = record.point + record.normal + GetRandomVectorInUnitSphere();//p+n = center. center+random point = point
+        Vec3 target = record.point + record.normal + GetLambertianRandomUnitVector();//p+n = center. center+random point = point
         return attenuation * GetRayColor(Ray(record.point, target - record.point), objects, --maxItr);
     }
 
