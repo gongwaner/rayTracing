@@ -8,7 +8,7 @@
 class Material
 {
 public:
-    virtual bool Scatter(const Ray& inRay, const HitRecord& record, Colorf& attenuation, Ray& scattered) const = 0;
+    virtual bool Scatter(const Ray& inRay, const HitRecord& record, Colorf& attenuation, Ray& scatteredRay) const = 0;
 };
 
 
@@ -33,7 +33,7 @@ public:
     Metal(const Colorf& inAlbedo);
 
     Vec3 Reflect(Vec3 inDirection, Vec3 normal) const;
-    virtual bool Scatter(const Ray& inRay, const HitRecord& record, Colorf& attenuation, Ray& scattered) const override;
+    virtual bool Scatter(const Ray& inRay, const HitRecord& record, Colorf& attenuation, Ray& scatteredRay) const override;
 };
 
 
@@ -44,8 +44,20 @@ class FuzzyMetal : public Metal
 public:
     FuzzyMetal(const Colorf& inAlbedo, double inFuzziness);
 
-    virtual bool Scatter(const Ray& inRay, const HitRecord& record, Colorf& attenuation, Ray& scattered) const override;
+    virtual bool Scatter(const Ray& inRay, const HitRecord& record, Colorf& attenuation, Ray& scatteredRay) const override;
 
+};
+
+
+class Dielectric : public Material
+{
+    double refractiveIndex;//n=c/v
+
+public:
+    Dielectric(double inRefractiveIndex);
+
+    Vec3 Refract(double etaiOverEtat, Vec3 inDirection, Vec3 normal) const;
+    virtual bool Scatter(const Ray& inRay, const HitRecord& record, Colorf& attenuation, Ray& scatteredRay) const override;
 };
 
 

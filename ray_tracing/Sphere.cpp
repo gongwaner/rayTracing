@@ -49,7 +49,7 @@ bool Sphere::Hit(const Ray& ray, double tMin, double tMax, HitRecord& record) co
     record.point = ray.PointAt(record.t);
     record.materialPtr = materialPtr;
 
-    Vec3 outward_normal = (record.point - center) / radius;
+    Vec3 outward_normal = (record.point - center) / radius;//normalize
     record.SetNormal(ray, outward_normal);
 
     return true;

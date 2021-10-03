@@ -49,7 +49,8 @@ int main()
     auto material_center = std::make_shared<Lambertian>(Colorf(0.7f, 0.3f, 0.3f));
     auto material_ground = std::make_shared<Lambertian>(Colorf(0.8f, 0.8f, 0.0f));
     auto material_left = std::make_shared<Metal>(Colorf(0.8f, 0.8f, 0.8f));
-    auto material_right = std::make_shared<FuzzyMetal>(Colorf(0.8f, 0.6f, 0.2f), 1.0);
+    auto material_right = std::make_shared<Dielectric>(1.5);
+
 
     std::vector<std::unique_ptr<Hittable>> objects;
     objects.push_back(std::make_unique<Sphere>(Vec3(0.0, -100.5, -1.0), 100, material_ground));//ground
