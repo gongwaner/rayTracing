@@ -14,6 +14,7 @@ private:
 
 public:
     //constructors
+    Colorf() = default;
     Colorf(float inR, float inG, float inB, float inA = 1.0f);
     Colorf(int inR, int inG, int inB, int inA = 255);
     Colorf(float rgba[4]);
@@ -38,6 +39,7 @@ public:
     Colorf operator+(const Colorf& c) const;
     Colorf operator-(const Colorf& c) const;
     Colorf operator*(float f) const;
+    Colorf operator*(const Colorf& c) const;
     Colorf operator/(float f) const;
     Colorf& operator+=(const Colorf& c);
     Colorf& operator*=(float f);

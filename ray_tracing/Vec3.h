@@ -61,6 +61,7 @@ public:
     double DistanceSquared(const Vec3& v) const;
     double Distance(const Vec3& v) const;
 
+    bool EpsilonEqual(double number, double epsilon) const;
     bool EpsilonEqual(const Vec3& v, double epsilon) const;
 };
 

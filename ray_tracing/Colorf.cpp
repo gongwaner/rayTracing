@@ -102,6 +102,11 @@ Colorf Colorf::operator*(float f) const
     return Colorf(r * f, g * f, b * f, a * f);
 }
 
+Colorf Colorf::operator*(const Colorf& c) const
+{
+    return Colorf(r * c.r, g * c.g, b * c.b, a);
+}
+
 Colorf Colorf::operator/(float f) const
 {
     return operator*(1 / f);

@@ -184,6 +184,13 @@ double Vec3::Distance(const Vec3& v) const
     return std::sqrt(DistanceSquared(v));
 }
 
+bool Vec3::EpsilonEqual(double number, double epsilon) const
+{
+    return (abs(x - number) <= epsilon &&
+            abs(y - number) <= epsilon &&
+            abs(z - number) <= epsilon);
+}
+
 bool Vec3::EpsilonEqual(const Vec3& v, double epsilon) const
 {
     return (abs(x - v.x) <= epsilon &&

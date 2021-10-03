@@ -12,6 +12,7 @@ private:
 
 public:
     //constructors
+    Ray() = default;
     Ray(const Vec3& inOrigin, const Vec3& inDirection);
 
 
