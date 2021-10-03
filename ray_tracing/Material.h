@@ -26,13 +26,26 @@ public:
 
 class Metal : public Material
 {
-private:
+protected:
     Colorf albedo;
 
 public:
     Metal(const Colorf& inAlbedo);
 
+    Vec3 Reflect(Vec3 inDirection, Vec3 normal) const;
     virtual bool Scatter(const Ray& inRay, const HitRecord& record, Colorf& attenuation, Ray& scattered) const override;
+};
+
+
+class FuzzyMetal : public Metal
+{
+    double fuzziness;
+
+public:
+    FuzzyMetal(const Colorf& inAlbedo, double inFuzziness);
+
+    virtual bool Scatter(const Ray& inRay, const HitRecord& record, Colorf& attenuation, Ray& scattered) const override;
+
 };
 
 
