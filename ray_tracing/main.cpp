@@ -9,40 +9,6 @@
 #include "Material.h"
 
 
-Colorf GetBackgroundColor(const Ray& ray)
-{
-    Vec3 unit_direction = ray.GetDirection().GetUnitVector();//(-1,1)
-    auto t = 0.5 * unit_direction.GetY() + 0.5;//convert (-1,1) to [0,1]
-
-    return Colorf::SkyBlue.Lerp(Colorf::White, t);
-}
-
-Colorf GetNormalColor(const HitRecord& record)
-{
-    return Colorf(float(0.5 * record.normal.GetX() + 0.5), float(0.5 * record.normal.GetY() + 0.5),
-                  float(0.5 * record.normal.GetZ() + 0.5));//convert (-1,1) to [0,1]
-}
-
-bool HitAnything(const Ray& ray, double tmin, double tmax, HitRecord& record,
-                 const std::vector<std::unique_ptr<Hittable>>& objects)
-{
-    HitRecord temp_record;
-    bool hit_anything = false;
-    double closest_so_far = tmax;
-
-    for(const auto& object:objects)
-    {
-        if(object->Hit(ray, tmin, closest_so_far, temp_record))
-        {
-            hit_anything = true;
-            record = temp_record;
-            closest_so_far = temp_record.t;
-        }
-    }
-
-    return hit_anything;
-}
-
 Colorf GetRayColor(const Ray& ray, const std::vector<std::unique_ptr<Hittable>>& objects, int maxItr = 10)
 {
     //exceed ray bounce limit, no more light is gathered
@@ -82,10 +48,15 @@ int main()
     //objects
     auto material_center = std::make_shared<Lambertian>(Colorf(0.7f, 0.3f, 0.3f));
     auto material_ground = std::make_shared<Lambertian>(Colorf(0.8f, 0.8f, 0.0f));
+    auto material_left = std::make_shared<Metal>(Colorf(0.8f, 0.8f, 0.8f));
+    auto material_right = std::make_shared<Metal>(Colorf(0.8f, 0.6f, 0.2f));
 
     std::vector<std::unique_ptr<Hittable>> objects;
-    objects.push_back(std::make_unique<Sphere>(Vec3(0.0, 0.0, -1.0), 0.5, material_center));
     objects.push_back(std::make_unique<Sphere>(Vec3(0.0, -100.5, -1.0), 100, material_ground));//ground
+
+    objects.push_back(std::make_unique<Sphere>(Vec3(-1.0, 0.0, -1.0), 0.5, material_left));
+    objects.push_back(std::make_unique<Sphere>(Vec3(0.0, 0.0, -1.0), 0.5, material_center));
+    objects.push_back(std::make_unique<Sphere>(Vec3(1.0, 0.0, -1.0), 0.5, material_right));
 
     //render
     out_stream << "P3\n" << image_width << ' ' << image_height << "\n255\n";

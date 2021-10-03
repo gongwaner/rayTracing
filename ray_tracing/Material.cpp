@@ -6,7 +6,7 @@ Lambertian::Lambertian(const Colorf& inAlbedo) : albedo(inAlbedo)
 {
 }
 
-bool Lambertian::Scatter(const Ray& ray, const HitRecord& record, Colorf& attenuation, Ray& scatteredRay) const
+bool Lambertian::Scatter(const Ray& inRay, const HitRecord& record, Colorf& attenuation, Ray& scatteredRay) const
 {
     Vec3 scatter_direction = record.normal + GetLambertianRandomUnitVector();
 
@@ -19,4 +19,19 @@ bool Lambertian::Scatter(const Ray& ray, const HitRecord& record, Colorf& attenu
     attenuation = albedo;
 
     return true;
+}
+
+
+Metal::Metal(const Colorf& inAlbedo) : albedo(inAlbedo)
+{
+}
+
+bool Metal::Scatter(const Ray& inRay, const HitRecord& record, Colorf& attenuation, Ray& scatteredRay) const
+{
+    Vec3 scatter_direction = inRay.GetDirection() + 2 * (-Vec3::Dot(inRay.GetDirection(), record.normal)) * record.normal;
+    scatteredRay = Ray(record.point, scatter_direction);
+    attenuation = albedo;
+
+    //only when scattered ray is on the horizontal level will light be scattered
+    return Vec3::Dot(scatteredRay.GetDirection(), record.normal) > 0;
 }

@@ -8,7 +8,7 @@
 class Material
 {
 public:
-    virtual bool Scatter(const Ray& ray, const HitRecord& record, Colorf& attenuation, Ray& scattered) const = 0;
+    virtual bool Scatter(const Ray& inRay, const HitRecord& record, Colorf& attenuation, Ray& scattered) const = 0;
 };
 
 
@@ -20,7 +20,19 @@ private:
 public:
     Lambertian(const Colorf& inAlbedo);
 
-    virtual bool Scatter(const Ray& ray, const HitRecord& record, Colorf& attenuation, Ray& scattered) const override;
+    virtual bool Scatter(const Ray& inRay, const HitRecord& record, Colorf& attenuation, Ray& scattered) const override;
+};
+
+
+class Metal : public Material
+{
+private:
+    Colorf albedo;
+
+public:
+    Metal(const Colorf& inAlbedo);
+
+    virtual bool Scatter(const Ray& inRay, const HitRecord& record, Colorf& attenuation, Ray& scattered) const override;
 };
 
 
