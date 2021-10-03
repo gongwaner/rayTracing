@@ -6,6 +6,7 @@
 #include "Sphere.h"
 #include "Camera.h"
 #include "CommonUtil.h"
+#include "Material.h"
 
 
 Colorf GetBackgroundColor(const Ray& ray)
@@ -48,13 +49,16 @@ Colorf GetRayColor(const Ray& ray, const std::vector<std::unique_ptr<Hittable>>&
     if(maxItr <= 0)
         return Colorf::Black;
 
-    const float attenuation = 0.5f;
     HitRecord record;
-
     if(HitAnything(ray, 0.0001, std::numeric_limits<double>::infinity(), record, objects))
     {
-        Vec3 target = record.point + record.normal + GetLambertianRandomUnitVector();//p+n = center. center+random point = point
-        return attenuation * GetRayColor(Ray(record.point, target - record.point), objects, --maxItr);
+        Ray scattered_ray;
+        Colorf attenuation;
+
+        if(record.materialPtr->Scatter(ray, record, attenuation, scattered_ray))
+            return attenuation * GetRayColor(scattered_ray, objects, --maxItr);
+
+        return Colorf::Black;
     }
 
     return GetBackgroundColor(ray);
@@ -76,9 +80,12 @@ int main()
     Camera camera;
 
     //objects
+    auto material_center = std::make_shared<Lambertian>(Colorf(0.7f, 0.3f, 0.3f));
+    auto material_ground = std::make_shared<Lambertian>(Colorf(0.8f, 0.8f, 0.0f));
+
     std::vector<std::unique_ptr<Hittable>> objects;
-    objects.push_back(std::make_unique<Sphere>(Vec3(0.0, 0.0, -1.0), 0.5));
-    objects.push_back(std::make_unique<Sphere>(Vec3(0.0, -100.5, -1.0), 100));//ground
+    objects.push_back(std::make_unique<Sphere>(Vec3(0.0, 0.0, -1.0), 0.5, material_center));
+    objects.push_back(std::make_unique<Sphere>(Vec3(0.0, -100.5, -1.0), 100, material_ground));//ground
 
     //render
     out_stream << "P3\n" << image_width << ' ' << image_height << "\n255\n";

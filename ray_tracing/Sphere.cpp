@@ -1,14 +1,9 @@
 #include "Sphere.h"
 
 //constructors
-Sphere::Sphere()
+Sphere::Sphere(const Vec3& inCenter, double inRadius, std::shared_ptr<Material> inMaterialPtr)
+    : center(inCenter), radius(inRadius), materialPtr(inMaterialPtr)
 {
-}
-
-Sphere::Sphere(const Vec3& inCenter, double inRadius)
-{
-    center = inCenter;
-    radius = inRadius;
 }
 
 
@@ -52,6 +47,7 @@ bool Sphere::Hit(const Ray& ray, double tMin, double tMax, HitRecord& record) co
     //write the result to record
     record.t = root;
     record.point = ray.PointAt(record.t);
+    record.materialPtr = materialPtr;
 
     Vec3 outward_normal = (record.point - center) / radius;
     record.SetNormal(ray, outward_normal);

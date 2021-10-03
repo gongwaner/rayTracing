@@ -3,17 +3,20 @@
 
 #include "Ray.h"
 
+class Material;
+
 struct HitRecord
 {
     Vec3 point;
     Vec3 normal;//the normal always points against the ray direction
     double t;
-    bool is_outside;
+    bool isOutside;
+    std::shared_ptr<Material> materialPtr;
 
     inline void SetNormal(const Ray& ray, const Vec3& outwardNormal)
     {
-        is_outside = Vec3::Dot(ray.GetDirection(), outwardNormal) < 0;
-        normal = is_outside ? outwardNormal : -outwardNormal;
+        isOutside = Vec3::Dot(ray.GetDirection(), outwardNormal) < 0;
+        normal = isOutside ? outwardNormal : -outwardNormal;
     }
 };
 

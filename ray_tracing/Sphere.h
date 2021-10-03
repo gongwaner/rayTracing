@@ -3,16 +3,18 @@
 
 #include "Hittable.h"
 
+
 class Sphere : public Hittable
 {
 private:
     Vec3 center;
     double radius;
+    std::shared_ptr<Material> materialPtr;
 
 public:
     //constructors
-    Sphere();
-    Sphere(const Vec3& inCenter, double inRadius);
+    Sphere() = default;
+    Sphere(const Vec3& inCenter, double inRadius, std::shared_ptr<Material> inMaterialPtr);
 
 
     //getter and setters
