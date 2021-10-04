@@ -107,7 +107,7 @@ bool Dielectric::Scatter(const Ray& inRay, const HitRecord& record, Colorf& atte
 
     Vec3 out_direction;
     if(CanRefract(refraction_ratio, cos_theta) ||
-       Schilick(cos_theta, refractiveIndex))//note:in Peter Shirley's code he passed refraction_ratio as second parameter and the effect is the same
+       Schilick(cos_theta, refractiveIndex) > GetRandomDouble())//note:in Peter Shirley's code he passed refraction_ratio as second parameter and the effect is the same
         out_direction = Refract(refraction_ratio, inRay.GetDirection(), record.normal);
     else
         out_direction = Reflect(inRay.GetDirection(), record.normal);
