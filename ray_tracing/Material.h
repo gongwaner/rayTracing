@@ -8,6 +8,7 @@
 class Material
 {
 public:
+    Vec3 Reflect(Vec3 inDirection, Vec3 normal) const;
     virtual bool Scatter(const Ray& inRay, const HitRecord& record, Colorf& attenuation, Ray& scatteredRay) const = 0;
 };
 
@@ -32,7 +33,6 @@ protected:
 public:
     Metal(const Colorf& inAlbedo);
 
-    Vec3 Reflect(Vec3 inDirection, Vec3 normal) const;
     virtual bool Scatter(const Ray& inRay, const HitRecord& record, Colorf& attenuation, Ray& scatteredRay) const override;
 };
 
