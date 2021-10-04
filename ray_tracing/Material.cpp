@@ -75,26 +75,39 @@ Vec3 Dielectric::Refract(double n1Overn2, Vec3 inDirection, Vec3 normal) const
     return perpendicular + parallel;
 }
 
-bool CanRefract(double refractionRatio, Vec3 inDirection, Vec3 normal)
+bool CanRefract(double refractionRatio, double inCosTheta)
 {
     //sin_theta' = refractionRatio*sin_theta.
     //If it is > 1, this causes a total internal reflection
-    double cos_theta = Vec3::Dot(inDirection.GetUnitVector(), normal);
-    assert(cos_theta < 1.0);
-    double sin_theta = sqrt(1 - cos_theta * cos_theta);
+    double sin_theta = sqrt(1 - inCosTheta * inCosTheta);
 
     return refractionRatio * sin_theta <= 1.0;
 }
 
+double Schilick(double inCosTheta, double inRefractiveIndex)
+{
+    //Schilick's approximation for reflectance
+    double vacuum_refractive_index = 1.0;//actually this should be 1.000293. for simplicity just use 1.0
+    double r0 = (vacuum_refractive_index - inRefractiveIndex) / (vacuum_refractive_index + inRefractiveIndex);
+    r0 *= r0;
+
+    return r0 + (1 - r0) * pow(1 - inCosTheta, 5);
+}
+
+
 bool Dielectric::Scatter(const Ray& inRay, const HitRecord& record, Colorf& attenuation, Ray& scatteredRay) const
 {
-    double vacuum_refractive_index = 1.0;
+    double vacuum_refractive_index = 1.0;//actually this should be 1.000293. for simplicity just use 1.0
     double refraction_ratio = record.isOutside ? vacuum_refractive_index / refractiveIndex : refractiveIndex;
     //the latter one should be refractiveIndex/vacuum_refractive_index
     //considering vacuum_refractive_index=1.0, it is abbreviated to refractiveIndex
 
+    double cos_theta = Vec3::Dot(-inRay.GetDirection().GetUnitVector(), record.normal);
+    assert(cos_theta < 1.0);
+
     Vec3 out_direction;
-    if(CanRefract(refraction_ratio, inRay.GetDirection(), record.normal))
+    if(CanRefract(refraction_ratio, cos_theta) ||
+       Schilick(cos_theta, refractiveIndex))//note:in Peter Shirley's code he passed refraction_ratio as second parameter and the effect is the same
         out_direction = Refract(refraction_ratio, inRay.GetDirection(), record.normal);
     else
         out_direction = Reflect(inRay.GetDirection(), record.normal);

@@ -47,17 +47,19 @@ int main()
 
     //objects
     auto material_ground = std::make_shared<Lambertian>(Colorf(0.564f, 0.827f, 0.996f));
-    auto material_left = std::make_shared<Metal>(Colorf(0.8f, 0.8f, 0.8f));
-    auto material_center = std::make_shared<Dielectric>(1.5);
-    auto material_right = std::make_shared<Lambertian>(Colorf(0.7f, 0.3f, 0.3f));
+    auto material_metal_grey = std::make_shared<Metal>(Colorf(0.8f, 0.8f, 0.8f));
+    auto material_dielectric_glass = std::make_shared<Dielectric>(1.5);
+    auto material_lambert_pink = std::make_shared<Lambertian>(Colorf(0.7f, 0.3f, 0.3f));
 
 
     std::vector<std::unique_ptr<Hittable>> objects;
     objects.push_back(std::make_unique<Sphere>(Vec3(0.0, -100.5, -1.0), 100, material_ground));//ground
 
-    objects.push_back(std::make_unique<Sphere>(Vec3(-1.0, 0.0, -1.5), 0.5, material_left));
-    objects.push_back(std::make_unique<Sphere>(Vec3(0.0, 0.0, -1.0), 0.5, material_center));
-    objects.push_back(std::make_unique<Sphere>(Vec3(1.0, 0.0, -2.0), 0.5, material_right));
+    objects.push_back(std::make_unique<Sphere>(Vec3(-1.0, 0.0, -1.5), 0.5, material_metal_grey));
+    objects.push_back(std::make_unique<Sphere>(Vec3(0.0, 0.0, -1.0), 0.5, material_dielectric_glass));
+    objects.push_back(std::make_unique<Sphere>(Vec3(1.0, 0.0, -2.0), 0.5, material_lambert_pink));
+    objects.push_back(std::make_unique<Sphere>(Vec3(1.5, 0.0, -1.6), -0.4, material_dielectric_glass));//trick:giving negative radius yields hollow sphere(aka.bubble)
+
 
     //render
     out_stream << "P3\n" << image_width << ' ' << image_height << "\n255\n";
