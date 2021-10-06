@@ -1,0 +1,9 @@
+
+*.xml
+*.iml
+*.cmake
+*.bin
+*.out
+*.c
+ray_tracing/cmake-build-debug/
+ray_tracing/cmake-build-release/
