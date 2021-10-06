@@ -3,6 +3,7 @@
 
 #include <ostream>
 #include <cmath>
+#include <algorithm>//for std::clamp
 
 class Colorf
 {
