@@ -14,7 +14,7 @@ private:
     Vec3 vertical;
 
 public:
-    Camera();
+    Camera(double verticalFov, float aspectRatio);
     Ray GetRay(double u, double v) const;
 };
 

@@ -4,6 +4,10 @@
 #include <random>
 
 
+//constants
+const double PI = 3.1415926535897932385;
+
+
 /**
  * return random number in [0,1)
  */
@@ -55,38 +59,9 @@ inline Vec3 GetLambertianRandomUnitVector()
     return GetRandomVectorInUnitSphere().GetUnitVector();
 }
 
-inline Colorf GetNormalColor(const HitRecord& record)
+inline double DegreesToRadius(double degrees)
 {
-    return Colorf(float(0.5 * record.normal.GetX() + 0.5), float(0.5 * record.normal.GetY() + 0.5),
-                  float(0.5 * record.normal.GetZ() + 0.5));//convert (-1,1) to [0,1]
-}
-
-inline Colorf GetBackgroundColor(const Ray& ray)
-{
-    Vec3 unit_direction = ray.GetDirection().GetUnitVector();//(-1,1)
-    auto t = 0.5 * unit_direction.GetY() + 0.5;//convert (-1,1) to [0,1]
-
-    return Colorf::SkyBlue.Lerp(Colorf::White, t);
-}
-
-inline bool HitAnything(const Ray& ray, double tmin, double tmax, HitRecord& record,
-                        const std::vector<std::unique_ptr<Hittable>>& objects)
-{
-    HitRecord temp_record;
-    bool hit_anything = false;
-    double closest_so_far = tmax;
-
-    for(const auto& object:objects)
-    {
-        if(object->Hit(ray, tmin, closest_so_far, temp_record))
-        {
-            hit_anything = true;
-            record = temp_record;
-            closest_so_far = temp_record.t;
-        }
-    }
-
-    return hit_anything;
+    return degrees * PI / 180.0;
 }
 
 

@@ -1,11 +1,15 @@
 #include "Camera.h"
+#include "CommonUtil.h"
 
-Camera::Camera()
+
+Camera::Camera(double verticalFov, float aspectRatio)
 {
-    const float aspect_ratio = 16.0f / 9.0f;
+    double theta = DegreesToRadius(verticalFov);
+    double h = tan(theta / 2.0);
 
-    float viewport_height = 2.0;
-    float viewport_width = aspect_ratio * viewport_height;
+    float viewport_height = 2.0 * h;
+    float viewport_width = aspectRatio * viewport_height;
+
     float focal_length = 1.0f;
 
     origin = Vec3(0.0, 0.0, 0.0);

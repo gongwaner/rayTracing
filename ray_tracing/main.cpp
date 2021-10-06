@@ -9,6 +9,41 @@
 #include "Material.h"
 
 
+Colorf GetNormalColor(const HitRecord& record)
+{
+    return Colorf(float(0.5 * record.normal.GetX() + 0.5), float(0.5 * record.normal.GetY() + 0.5),
+                  float(0.5 * record.normal.GetZ() + 0.5));//convert (-1,1) to [0,1]
+}
+
+Colorf GetBackgroundColor(const Ray& ray)
+{
+    Vec3 unit_direction = ray.GetDirection().GetUnitVector();//(-1,1)
+    auto t = 0.5 * unit_direction.GetY() + 0.5;//convert (-1,1) to [0,1]
+
+    return Colorf::SkyBlue.Lerp(Colorf::White, t);
+}
+
+bool HitAnything(const Ray& ray, double tmin, double tmax, HitRecord& record,
+                 const std::vector<std::unique_ptr<Hittable>>& objects)
+{
+    HitRecord temp_record;
+    bool hit_anything = false;
+    double closest_so_far = tmax;
+
+    for(const auto& object:objects)
+    {
+        if(object->Hit(ray, tmin, closest_so_far, temp_record))
+        {
+            hit_anything = true;
+            record = temp_record;
+            closest_so_far = temp_record.t;
+        }
+    }
+
+    return hit_anything;
+}
+
+
 Colorf GetRayColor(const Ray& ray, const std::vector<std::unique_ptr<Hittable>>& objects, int maxItr = 10)
 {
     //exceed ray bounce limit, no more light is gathered
@@ -43,7 +78,7 @@ int main()
     const int max_iter = 20;
 
     //camera
-    Camera camera;
+    Camera camera(90.0, aspect_ratio);
 
     //objects
     auto material_ground = std::make_shared<Lambertian>(Colorf(0.564f, 0.827f, 0.996f));
