@@ -2,20 +2,24 @@
 #include "CommonUtil.h"
 
 
-Camera::Camera(double verticalFov, float aspectRatio)
+Camera::Camera(Vec3 lookFrom, Vec3 lookAt, Vec3 up,
+               double verticalFov, float aspectRatio)
 {
+    //assume z = -1. tan(theta/2)=h/z. hence h=tan(theta/2)
     double theta = DegreesToRadius(verticalFov);
     double h = tan(theta / 2.0);
 
     float viewport_height = 2.0 * h;
     float viewport_width = aspectRatio * viewport_height;
 
-    float focal_length = 1.0f;
+    Vec3 w = (lookFrom - lookAt).GetUnitVector();
+    Vec3 u = Vec3::Cross(up, w);
+    Vec3 v = Vec3::Cross(w, u);
 
-    origin = Vec3(0.0, 0.0, 0.0);
-    horizontal = Vec3(viewport_width, 0.0, 0.0);
-    vertical = Vec3(0.0, viewport_height, 0.0);
-    lowerLeftCorner = origin - horizontal / 2.0 - vertical / 2.0 - Vec3(0, 0, focal_length);
+    origin = lookFrom;
+    horizontal = viewport_width * u;
+    vertical = viewport_height * v;
+    lowerLeftCorner = origin - horizontal / 2.0 - vertical / 2.0 - w;
 }
 
 Ray Camera::GetRay(double u, double v) const

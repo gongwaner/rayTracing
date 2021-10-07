@@ -78,7 +78,10 @@ int main()
     const int max_iter = 20;
 
     //camera
-    Camera camera(90.0, aspect_ratio);
+    Vec3 look_from(-2, 2, 1);
+    Vec3 look_at(0, 0, -1);
+    Vec3 up(0, 1, 0);
+    Camera camera(look_from, look_at, up, 90.0, aspect_ratio);
 
     //objects
     auto material_ground = std::make_shared<Lambertian>(Colorf(0.564f, 0.827f, 0.996f));
